@@ -1,0 +1,8 @@
+---
+
+- include: install.yml
+- include: database.yml
+  tags: mysql
+- include: memcached.yml
+- include: configure.yml
+- include: unicorn.yml

@@ -1,0 +1,10 @@
+---
+
+- name: create openproject environment configuration
+  template:
+    src: '{{item}}.jinja2'
+    dest: /etc/openproject-ce/conf.d/{{item}}
+  with_items:
+  - database
+  - memcached
+  - smtp

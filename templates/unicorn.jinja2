@@ -1,0 +1,18 @@
+CONFIGURED=yes
+
+# Default timeout until child process is killed during server upgrade,
+# it has *no* relation to option "timeout" in server's config.rb.
+TIMEOUT=60
+
+# Path to your web application, sh'ld be also set in server's config.rb,
+# option "working_directory". Rack's config.ru is located here.
+APP_ROOT=/opt/openproject_ce
+
+# Server's config.rb, it's not a rack's config.ru
+CONFIG_RB="$APP_ROOT/unicorn.conf.rb"
+
+# Where to store PID, sh'ld be also set in server's config.rb, option "pid".
+PID=/run/unicorn.pid
+
+# Additional arguments passed to unicorn, see man (1) unicorn.
+UNICORN_OPTS="-D -c $CONFIG_RB"

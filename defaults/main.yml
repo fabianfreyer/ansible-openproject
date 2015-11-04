@@ -1,0 +1,26 @@
+---
+
+openproject_branch: 'stable'
+openproject_version: '4.2'
+
+db:
+  connection: mysql
+  name: openproject
+  user: openproject
+  password: openproject
+  host: localhost
+  port: 3306
+
+memcached:
+  host: localhost
+  port: 11211
+
+mail_method: sendmail
+admin_email: root@localhost
+smtp_auth: false
+smtp_host: localhost
+smtp_port: 25
+smtp_user:
+smtp_password:
+smtp_domain: ""
+smtp_url: "smtp://{% if smtp_auth %}{{smtp_user}}:{{smtp_password}}@{% endif %}{{smtp_host}}:{{smtp_port}}/{{smtp_domain}}"

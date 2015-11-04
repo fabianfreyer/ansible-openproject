@@ -1,0 +1,17 @@
+---
+
+- name: ensure mysql python packages are present
+  apt: name=python-mysqldb
+
+- name: create database
+  mysql_db:
+    name: '{{db.name}}'
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: create database user
+  mysql_user:
+    name: '{{db.user}}'
+    password: '{{db.password}}'
+    priv: '{{db.name}}.*:ALL'
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+

@@ -1,0 +1,32 @@
+---
+
+- name: enable apt https transport
+  apt:
+    name: apt-transport-https
+    state: installed
+    force: yes
+  tags:
+  - openproject
+
+- name: add packager.io repository key
+  apt_key:
+    url: 'https://deb.packager.io/key'
+    id: BD33EEB8
+  tags:
+  - openproject
+
+- name: add openproject apt repository
+  apt_repository:
+    repo: 'deb https://deb.packager.io/gh/finnlabs/pkgr-openproject-community {{ansible_distribution_release}} {{openproject_branch}}/{{openproject_version}}'
+    update_cache: yes
+  tags:
+  - openproject
+
+- name: install openproject-ce
+  apt:
+    name: '{{item}}'
+  with_items:
+  - openproject-ce
+  - memcached
+  tags:
+  - openproject

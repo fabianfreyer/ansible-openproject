@@ -1,0 +1,13 @@
+---
+# FIXME: the installation of memcached should probably be moved to a diferent role.
+
+- name: install memcached
+  apt: name=memcached
+
+- name: enable memcached
+  service:
+    name: memcached
+    state: started
+    enabled: yes
+
+# FIXME: configure memcached ports etc...

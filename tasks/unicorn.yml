@@ -1,0 +1,15 @@
+---
+
+- name: install unicorn
+  apt: name=unicorn
+
+- name: configure unicorn
+  template:
+    src: unicorn.jinja2
+    dest: /etc/default/unicorn
+
+- name: enable unicorn
+  service:
+    name: unicorn
+    enabled: yes
+    state: started
