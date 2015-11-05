@@ -1,0 +1,18 @@
+---
+
+production:
+{% if mail_method == "sendmail" %}
+  email_delivery_method: :sendmail
+{% elif mail_method == "smtp" %}
+  email_delivery_method: :{{mail_method}}
+  smtp_address: {{smtp_host}}
+  smtp_port: {{smtp_port}}
+  smtp_domain: {{smtp_domain}}
+  smtp_user_name: {{smtp_user}}
+  smtp_password: {{smtp_password}}
+  smtp_enable_starttls_auto: true
+  smtp_authentication: {{smtp_auth}}
+  rails_force_ssl: false
+  rails_cache_store: :memcache
+{%endif%}
+

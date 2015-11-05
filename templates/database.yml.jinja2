@@ -1,0 +1,25 @@
+---
+
+production:
+{% if db.connection == "mysql" %}
+  adapter: mysql2
+{% else %}
+  adapter: {{ db.connection }}
+{% endif %}
+  database: {{db.name}}
+  host: {{db.host}}
+  username: {{db.user}}
+  password: {{db.password}}
+  encoding: utf8
+
+development:
+{% if db.connection == "mysql" %}
+  adapter: mysql2
+{% else %}
+  adapter: {{ db.connection }}
+{% endif %}
+  database: {{db.name}}
+  host: {{db.host}}
+  username: {{db.user}}
+  password: {{db.password}}
+  encoding: utf8
