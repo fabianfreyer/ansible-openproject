@@ -56,6 +56,7 @@
   command: su - {{rbenv_user}} -c "rbenv versions"
   register: rbenv_versions
   changed_when: False
+  failed_when: False
 
 - name: install ruby
   command: su - {{rbenv_user}} -c "rbenv install {{ruby_version}}"
