@@ -1,0 +1,57 @@
+---
+
+- name: clone nodenv
+  git:
+    repo: 'https://github.com/OiNutter/nodenv.git'
+    dest: ~{{nodenv_user}}/.nodenv
+    depth: 1
+  register: cloned_nodenv
+
+- name: setup nodenv
+  lineinfile:
+    dest: ~{{nodenv_user}}/.profile
+    line: '{{item}}'
+  with_items:
+  - 'export PATH="$HOME/.nodenv/bin:$PATH"'
+  - 'eval "$(nodenv init -)"'
+
+- name: setup node-build
+  git:
+    repo: 'https://github.com/OiNutter/node-build.git'
+    dest: ~{{nodenv_user}}/.nodenv/plugins/node-build
+    depth: 1
+  register: cloned_node_build
+
+# do not run this as a handler but as a task here because we will need this before
+# end of playbook execution.
+- name: change ownership of nodenv
+  file:
+    path: ~{{nodenv_user}}/.nodenv
+    owner: '{{nodenv_user}}'
+    group: '{{nodenv_group}}'
+    recurse: yes
+  when: cloned_node_build.changed or cloned_nodenv.changed
+
+- name: get installed node versions
+  command: su - {{nodenv_user}} -c "nodenv versions"
+  register: nodenv_versions
+  changed_when: False
+  failed_when: False
+
+- name: install node
+  command: su - {{nodenv_user}} -c "nodenv install {{node_version}}"
+  when: node_version not in nodenv_versions.stdout
+  async: 3600
+  poll: 5
+
+# no need to nodenv rehash here since su -c will re-source .profile anyways
+
+- name: get selected nodenv node version
+  command: su - {{nodenv_user}} -c "nodenv version"
+  register: nodenv_version
+  changed_when: False
+
+- name: select node version
+  command: su - {{nodenv_user}} -c "nodenv global {{node_version}}"
+  when: node_version not in nodenv_version.stdout
+

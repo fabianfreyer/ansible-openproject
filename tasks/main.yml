@@ -9,6 +9,13 @@
     rbenv_group: '{{openproject_group}}'
   tags: ruby
 
+- include: nodenv.yml
+  vars:
+    node_version: 0.12.7
+    nodenv_user: '{{openproject_user}}'
+    nodenv_group: '{{openproject_group}}'
+  tags: node
+
 - include: install.yml
 - include: database.yml
   tags: mysql
