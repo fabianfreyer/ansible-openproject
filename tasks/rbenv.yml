@@ -1,0 +1,75 @@
+---
+
+- name: install dependencies
+  apt: name={{item}}
+  with_items:
+  - zlib1g-dev
+  - build-essential
+  - libssl-dev
+  - libreadline-dev
+  - libyaml-dev
+  - libgdbm-dev
+  - libncurses5-dev
+  - automake
+  - libtool
+  - bison
+  - libffi-dev
+  - git
+  - curl
+  - libxml2
+  - libxml2-dev
+  - libxslt1-dev
+
+- name: clone rbenv
+  git:
+    repo: 'https://github.com/sstephenson/rbenv.git'
+    dest: ~{{rbenv_user}}/.rbenv
+    depth: 1
+  register: cloned_rbenv
+
+- name: setup rbenv
+  lineinfile:
+    dest: ~{{rbenv_user}}/.profile
+    line: '{{item}}'
+  with_items:
+  - 'export PATH="$HOME/.rbenv/bin:$PATH"'
+  - 'eval "$(rbenv init -)"'
+
+- name: setup ruby-build
+  git:
+    repo: 'https://github.com/sstephenson/ruby-build.git'
+    dest: ~{{rbenv_user}}/.rbenv/plugins/ruby-build
+    depth: 1
+  register: cloned_ruby_build
+
+# do not run this as a handler but as a task here because we will need this before
+# end of playbook execution.
+- name: change ownership of rbenv
+  file:
+    path: ~{{rbenv_user}}/.rbenv
+    owner: '{{rbenv_user}}'
+    group: '{{rbenv_group}}'
+    recurse: yes
+  when: cloned_ruby_build.changed or cloned_rbenv.changed
+
+- name: get installed ruby versions
+  command: su - {{rbenv_user}} -c "rbenv versions"
+  register: rbenv_versions
+  changed_when: False
+
+- name: install ruby
+  command: su - {{rbenv_user}} -c "rbenv install {{ruby_version}}"
+  when: ruby_version not in rbenv_versions.stdout
+  async: 3600
+  poll: 5
+
+# no need to rbenv rehash here since su -c will re-source .profile anyways
+
+- name: get selected rbenv ruby version
+  command: su - {{rbenv_user}} -c "rbenv version"
+  register: rbenv_version
+  changed_when: False
+
+- name: select ruby version
+  command: su - {{rbenv_user}} -c "rbenv global {{ruby_version}}"
+  when: ruby_version not in rbenv_version.stdout

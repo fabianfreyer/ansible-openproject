@@ -1,5 +1,14 @@
 ---
 
+- include: user.yml
+
+- include: rbenv.yml
+  vars:
+    ruby_version: 2.1.6
+    rbenv_user: '{{openproject_user}}'
+    rbenv_group: '{{openproject_group}}'
+  tags: ruby
+
 - include: install.yml
 - include: database.yml
   tags: mysql

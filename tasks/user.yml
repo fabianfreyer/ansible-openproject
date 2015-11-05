@@ -1,0 +1,13 @@
+---
+
+- name: create openproject group
+  group:
+    name: '{{openproject_group}}'
+    system: yes
+
+- name: create openproject user
+  user:
+    name: '{{openproject_user}}'
+    group: '{{openproject_group}}'
+    home: '{{openproject_path}}'
+    system: yes
