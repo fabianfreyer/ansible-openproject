@@ -3,7 +3,7 @@
 - name: create openproject environment configuration
   template:
     src: '{{item}}.yml.jinja2'
-    dest: '{{openproject_path}}/openproject/config{{item}}.yml'
+    dest: '{{openproject_path}}/openproject/config/{{item}}.yml'
   with_items:
   - database
   - configuration
