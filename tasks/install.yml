@@ -1,32 +1,58 @@
 ---
 
-- name: enable apt https transport
-  apt:
-    name: apt-transport-https
-    state: installed
-    force: yes
-  tags:
-  - openproject
-
-- name: add packager.io repository key
-  apt_key:
-    url: 'https://deb.packager.io/key'
-    id: BD33EEB8
-  tags:
-  - openproject
-
-- name: add openproject apt repository
-  apt_repository:
-    repo: 'deb https://deb.packager.io/gh/finnlabs/pkgr-openproject-community {{ansible_distribution_release}} {{openproject_branch}}/{{openproject_version}}'
-    update_cache: yes
-  tags:
-  - openproject
-
-- name: install openproject-ce
+- name: install openproject dependencies
   apt:
     name: '{{item}}'
   with_items:
-  - openproject-ce
   - memcached
-  tags:
-  - openproject
+  - libmysqlclient-dev
+
+- name: clone openproject
+  git:
+    repo: 'https://github.com/opf/openproject.git'
+    dest: '{{openproject_path}}/openproject'
+    depth: 1
+  async: 3600
+  poll: 1
+  register: cloned_openproject
+
+# do not run this as a handler but as a task here because we will need this before
+# end of playbook execution.
+- name: change ownership of openproject
+  file:
+    path: '{{openproject_path}}/openproject'
+    owner: '{{openproject_user}}'
+    group: '{{openproject_group}}'
+    recurse: yes
+  when: cloned_openproject.changed
+
+- name: install bundler
+  gem:
+    name: bundler
+    executable: ~{{openproject_user}}/.rbenv/shims/gem
+  become: yes
+  become_user: '{{openproject_user}}'
+
+- name: install openproject ruby dependencies
+  shell: cd {{openproject_path}}/openproject && ~{{openproject_user}}/.rbenv/shims/bundle install --deployment --without postgres sqlite rmagick development test therubyracer
+  # FIXME: from ansible v2.0.0 we can use this
+  # bundler:
+  #   chdir: '{{openproject_path}}/openproject'
+  #   executable: ~{{openproject_user}}/.rbenv/shims/bundler
+  #   deployment_mode: yes
+  #   extra_args: '--without postgres sqlite rmagick development test therubyracer'
+  become: yes
+  become_user: '{{openproject_user}}'
+  async: 3600
+  poll: 1
+  register: run_bundler
+  changed_when: '"Installing" in run_bundler.stdout'
+
+- name: install openproject node dependencies
+  npm:
+    path: '{{openproject_path}}/openproject'
+    executable: ~{{openproject_user}}/.nodenv/shims/npm
+  become: yes
+  become_user: '{{openproject_user}}'
+  async: 3600
+  poll: 1
