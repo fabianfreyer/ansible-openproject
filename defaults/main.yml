@@ -5,6 +5,7 @@ openproject_version: '4.2'
 openproject_path: /srv/openproject
 openproject_user: openproject
 openproject_group: openproject
+openproject_locale: en
 
 db:
   connection: mysql
