@@ -1,0 +1,19 @@
+[Unit]
+Description=Openproject in a Unicorn
+Requires=network.target
+Requires=nginx.service
+Before=nginx.service
+AssertPathExists={{openproject_path}}/openproject
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "bundle exec unicorn --port {{unicorn.port}} --host {{unicorn.host}} --env production"
+PrivateTmp=yes
+PrivateHome=yes
+User={{openproject_user}}
+Group={{openproject_group}}
+WorkingDirectory={{openproject_path}}/openproject
+Restart=always
+
+[Install]
+WantedBy=multiuser.target

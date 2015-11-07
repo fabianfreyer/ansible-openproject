@@ -1,15 +1,12 @@
 ---
 
-- name: install unicorn
-  apt: name=unicorn
-
-- name: configure unicorn
+- name: install openproject
   template:
-    src: unicorn.jinja2
-    dest: /etc/default/unicorn
+    src: openproject.service.jinja2
+    dest: /etc/systemd/system/openproject.service
 
-- name: enable unicorn
+- name: enable openproject
   service:
-    name: unicorn
+    name: openproject
     enabled: yes
     state: started
