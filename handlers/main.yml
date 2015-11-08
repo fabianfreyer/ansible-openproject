@@ -1,0 +1,4 @@
+---
+
+- name: reload systemd unit files
+  command: systemctl daemon-reload

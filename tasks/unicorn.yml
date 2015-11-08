@@ -4,6 +4,8 @@
   template:
     src: openproject.service.jinja2
     dest: /etc/systemd/system/openproject.service
+  notify:
+  - reload systemd unit files
 
 - name: enable openproject
   service:
