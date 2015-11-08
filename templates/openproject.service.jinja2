@@ -12,6 +12,7 @@ User={{openproject_user}}
 Group={{openproject_group}}
 WorkingDirectory={{openproject_path}}/openproject
 Restart=always
+Environment="SECRET_KEY_BASE={{secret_key_base}}"
 
 [Install]
 WantedBy=multiuser.target
