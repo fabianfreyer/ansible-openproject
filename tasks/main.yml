@@ -22,3 +22,6 @@
 - include: memcached.yml
 - include: configure.yml
 - include: unicorn.yml
+
+- include: nginx.yml
+  tags: nginx

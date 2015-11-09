@@ -1,0 +1,17 @@
+---
+
+- name: create nginx configuration file
+  template:
+    src: nginx.conf.jinja2
+    dest: /etc/nginx/sites-available/openproject.conf
+  notify:
+  - reload nginx
+
+- name: enable nginx configuration
+  file:
+    src: /etc/nginx/sites-available/openproject.conf
+    dest: /etc/nginx/sites-enabled/openproject.conf
+    state: link
+  notify:
+  - reload nginx
+
