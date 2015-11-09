@@ -6,7 +6,11 @@ Before=nginx.service
 
 [Service]
 Type=simple
+{% if unicorn.socket == "tcp" %}
 ExecStart=/bin/sh -l -c "bundle exec unicorn --port {{unicorn.port}} --host {{unicorn.host}} --env production"
+{% elif unicorn.socket == "unix" %}
+ExecStart=/bin/sh -l -c "bundle exec unicorn --listen {{unicorn.path}} --env production"
+{% endif %}
 PrivateTmp=yes
 User={{openproject_user}}
 Group={{openproject_group}}
