@@ -11,6 +11,8 @@
   git:
     repo: 'https://github.com/opf/openproject.git'
     dest: '{{openproject_path}}/openproject'
+    version: '{{openproject_branch}}/{{openproject_version}}'
+    force: yes
     depth: 1
   async: 3600
   poll: 1
