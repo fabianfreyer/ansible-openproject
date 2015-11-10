@@ -36,7 +36,7 @@
   become_user: '{{openproject_user}}'
 
 - name: install openproject ruby dependencies
-  shell: cd {{openproject_path}}/openproject && ~{{openproject_user}}/.rbenv/shims/bundle install --deployment --without postgres sqlite rmagick development test therubyracer
+  shell: cd {{openproject_path}}/openproject && ~{{openproject_user}}/.rbenv/shims/bundle install --without postgres sqlite rmagick development test therubyracer
   # FIXME: from ansible v2.0.0 we can use this
   # bundler:
   #   chdir: '{{openproject_path}}/openproject'
