@@ -1,0 +1,8 @@
+---
+
+- name: generate plugins gemfile
+  template:
+    src: Gemfile.plugins.jinja2
+    dest: '{{openproject_path}}/openproject/Gemfile.plugins'
+    owner: '{{openproject_user}}'
+    group: '{{openproject_group}}'

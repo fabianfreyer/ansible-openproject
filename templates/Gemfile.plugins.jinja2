@@ -1,0 +1,7 @@
+{% for name, repo in plugins.iteritems() %}
+{% if repo is mapping %}
+gem '{{name}}', :git => '{{repo.url}}', :branch => '{{repo.branch}}'
+{% else %}
+gem '{{name}}', :git => '{{repo}}', :branch => '{{openproject_branch}}/{{openproject_version}}'
+{% endif %}
+{% endfor %}

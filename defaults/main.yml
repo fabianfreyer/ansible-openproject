@@ -6,6 +6,9 @@ openproject_path: /srv/openproject
 openproject_user: openproject
 openproject_group: openproject
 openproject_locale: en
+
+plugins: {}
+
 unicorn:
   socket: unix
   path: '{{openproject_path}}/unicorn.sock'
