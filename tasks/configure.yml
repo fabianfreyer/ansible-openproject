@@ -9,7 +9,7 @@
   - configuration
 
 - name: set up database
-  shell: . ~{{openproject_user}}/.profile && ~{{openproject_user}}/.rbenv/shims/bundle exec rake db:create:all
+  shell: 'su - {{openproject_user}} -c "cd ~/openproject && bundle exec rake db:create:all"'
   args:
     chdir: '{{openproject_path}}/openproject'
   # FIXME: from ansible v2.0.0 we can maybe use the bundler module
@@ -19,7 +19,7 @@
   changed_when: '"already exists" not in rake_db_create_all.stderr'
 
 - name: generate secret token
-  shell: . ~{{openproject_user}}/.profile && ~{{openproject_user}}/.rbenv/shims/bundle exec rake generate_secret_token
+  shell: 'su - {{openproject_user}} -c "cd ~/openproject && bundle exec rake generate_secret_token"'
   args:
     chdir: '{{openproject_path}}/openproject'
     creates: '{{openproject_path}}/openproject/config/secret_token.yml'
@@ -28,7 +28,7 @@
   become_user: '{{openproject_user}}'
 
 - name: migrate database
-  shell: . ~{{openproject_user}}/.profile && ~{{openproject_user}}/.rbenv/shims/bundle exec rake db:migrate
+  shell: 'su - {{openproject_user}} -c "cd ~/openproject && bundle exec rake db:migrate"'
   args:
     chdir: '{{openproject_path}}/openproject'
   environment:
@@ -40,7 +40,7 @@
   changed_when: generate_migration.stdout != ""
 
 - name: seed database
-  shell: . ~{{openproject_user}}/.profile && ~{{openproject_user}}/.rbenv/shims/bundle exec rake db:seed
+  shell: 'su - {{openproject_user}} -c "cd ~/openproject && bundle exec rake db:seed"'
   args:
     chdir: '{{openproject_path}}/openproject'
   environment:
@@ -53,7 +53,7 @@
   changed_when: '"Skipping" not in seed_database.stdout'
 
 - name: precompile assets
-  shell: . ~{{openproject_user}}/.profile && ~{{openproject_user}}/.rbenv/shims/bundle exec rake assets:precompile
+  shell: 'su - {{openproject_user}} -c "cd ~/openproject && bundle exec rake assets:precompile"'
   args:
     chdir: '{{openproject_path}}/openproject'
   environment:
