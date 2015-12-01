@@ -25,3 +25,6 @@
 
 - include: nginx.yml
   tags: nginx
+
+- include: cron.yml
+  tags: cron

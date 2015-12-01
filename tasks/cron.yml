@@ -1,0 +1,7 @@
+---
+
+- name: enable openproject background jobs
+  cron:
+    name: 'openproject background jobs'
+    job: cd {{openproject_path}}/openproject && sh -c '. $HOME/.profile ; env RAILS_ENV="production" {{openproject_path}}/openproject/bin/rake jobs:workoff >/dev/null'
+    user: '{{openproject_user}}'
