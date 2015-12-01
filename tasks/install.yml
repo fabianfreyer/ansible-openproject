@@ -28,34 +28,36 @@
   when: cloned_openproject.changed
 
 - name: install bundler
-  gem:
-    name: bundler
-    executable: ~{{openproject_user}}/.rbenv/shims/gem
-  become: yes
-  become_user: '{{openproject_user}}'
+  shell: 'su - {{ openproject_user }} -c "gem install bundler"'
+#  gem:
+#    name: bundler
+#    executable: ~{{openproject_user}}/.rbenv/shims/gem
+#  become: yes
+#  become_user: '{{openproject_user}}'
 
 - include: plugins.yml
 
 - name: install openproject ruby dependencies
-  shell: cd {{openproject_path}}/openproject && ~{{openproject_user}}/.rbenv/shims/bundle install --without postgres sqlite rmagick development test therubyracer
+  shell: 'su - {{ openproject_user }} -c "cd {{openproject_path}}/openproject && bundle install --without postgres sqlite rmagick development test therubyracer"'
   # FIXME: from ansible v2.0.0 we can use this
   # bundler:
   #   chdir: '{{openproject_path}}/openproject'
   #   executable: ~{{openproject_user}}/.rbenv/shims/bundler
   #   deployment_mode: yes
   #   extra_args: '--without postgres sqlite rmagick development test therubyracer'
-  become: yes
-  become_user: '{{openproject_user}}'
+  #become: yes
+  #become_user: '{{openproject_user}}'
   async: 3600
   poll: 1
   register: run_bundler
   #  changed_when: '"Installing" in run_bundler.stdout'
 
 - name: install openproject node dependencies
-  npm:
-    path: '{{openproject_path}}/openproject'
-    executable: ~{{openproject_user}}/.nodenv/shims/npm
-  become: yes
-  become_user: '{{openproject_user}}'
+  shell: 'su - {{ openproject_user }} -c "cd {{openproject_path}}/openproject && npm install"'
+  #npm:
+  #  path: '{{openproject_path}}/openproject'
+  #  executable: ~{{openproject_user}}/.nodenv/shims/npm
+  #become: yes
+  #become_user: '{{openproject_user}}'
   async: 3600
   poll: 1
