@@ -1,6 +1,6 @@
 ---
 
-production:
+default:
 {% if mail_method == "sendmail" %}
   email_delivery_method: :sendmail
 {% elif mail_method == "smtp" %}
