@@ -6,3 +6,4 @@
     dest: '{{openproject_path}}/openproject/Gemfile.plugins'
     owner: '{{openproject_user}}'
     group: '{{openproject_group}}'
+  notify: restart openproject

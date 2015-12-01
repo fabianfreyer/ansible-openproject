@@ -7,3 +7,8 @@
   service:
     name: nginx
     state: reloaded
+
+- name: restart openproject
+  service:
+    name: openproject
+    state: restarted
