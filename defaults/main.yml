@@ -1,7 +1,7 @@
 ---
 
-openproject_branch: 'stable'
-openproject_version: '4.2'
+openproject_branch: ''
+openproject_version: '5.0.4'
 openproject_path: /srv/openproject
 openproject_user: openproject
 openproject_group: openproject

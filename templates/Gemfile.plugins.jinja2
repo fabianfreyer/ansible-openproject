@@ -2,6 +2,6 @@
 {% if repo is mapping %}
 gem '{{name}}', :git => '{{repo.url}}', :branch => '{{repo.branch}}'
 {% else %}
-gem '{{name}}', :git => '{{repo}}', :branch => '{{openproject_branch}}/{{openproject_version}}'
+gem '{{name}}', :git => '{{repo}}', :branch => '{% if openproject_branch %}{{openproject_branch}}/{% else %}v{% endif %}{{openproject_version}}'
 {% endif %}
 {% endfor %}
