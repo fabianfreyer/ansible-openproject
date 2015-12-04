@@ -1,0 +1,32 @@
+---
+language: "python"
+python:
+- 2.7
+
+git:
+  submodules: true
+
+env:
+- ANSIBLE_VERSION=1.9.0.1
+- ANSIBLE_VERSION=1.9.1
+- ANSIBLE_VERSION=1.9.2
+- ANSIBLE_VERSION=1.9.3
+- ANSIBLE_VERSION=1.9.4
+
+before_install:
+# Make sure everything's up to date.
+- sudo apt-get update -qq
+
+install:
+- pip install ansible==$ANSIBLE_VERSION
+- "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+- ansible-galaxy install -r requirements.yml
+
+script:
+- "ansible-playbook -i tests/travis-inventory tests/travis-playbook.yml --syntax-check"
+- "ansible-playbook -i tests/travis-inventory tests/travis-playbook.yml --connection=local --sudo"
+- "ansible-playbook -i tests/travis-inventory tests/travis-playbook.yml --connection=local --sudo | tee idempotence.log"
+- >
+  grep -q 'changed=0.*failed=0' idempotence.log
+  && (echo 'Idempotence test: pass' && exit 0)
+  || (echo 'Idempotence test: fail' && exit 1)
