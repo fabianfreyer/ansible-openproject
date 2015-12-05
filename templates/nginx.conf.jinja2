@@ -1,15 +1,6 @@
 {# adapted from https://github.com/abevoelker/docker-openproject/blob/master/nginx/sites-available/openproject.conf #}
 
-upstream openproject {
-{% if unicorn.socket == "unix" %}
-  server unix:{{unicorn.path}} fail_timeout=0;
-{% elif unicorn.socket == "tcp" %}
-  server {{unicorn.host}}:{{unicorn.port}} fail_timeout=0;
-{% endif %}
-}
-
-server {
-  server_name {{hostname}};
+{% macro locations %}
   root {{openproject_path}}/openproject/public;
   index index.html;
 
@@ -29,4 +20,30 @@ server {
     expires max;
     log_not_found off;
   }
+{% endmacro %}
+
+upstream openproject {
+{% if unicorn.socket == "unix" %}
+  server unix:{{unicorn.path}} fail_timeout=0;
+{% elif unicorn.socket == "tcp" %}
+  server {{unicorn.host}}:{{unicorn.port}} fail_timeout=0;
+{% endif %}
 }
+
+
+server {
+  server_name {{hostname}};
+  {% locations %}
+}
+
+{% if use_letsencrypt %}
+server {
+  listen 443 ssl;
+
+  ssl_certificate     /etc/letsencrypt/live/{{hostname}}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{hostname}}/privkey.pem;
+
+  server_name {{hostname}};
+  {% locations %}
+}
+{% endif %}

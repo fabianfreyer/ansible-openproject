@@ -1,4 +1,7 @@
 ---
+- name: check if letsencrypt certificate folder exists
+  stat: path=/etc/letsencrypt/live/{{ hostname }}
+  register: use_letsencrypt
 
 - name: create nginx configuration file
   template:
