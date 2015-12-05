@@ -2,3 +2,4 @@
 
 dependencies:
 - role: mysql_server
+- role: nginx_php5-fpm
