@@ -31,10 +31,17 @@ upstream openproject {
 }
 
 {% if use_letsencrypt %}
+{% if redirect_ssl %}
 server {
   server_name {{hostname}};
   return 301 https://$server_name$request_uri;
 }
+{% else %}
+server {
+  server_name {{hostname}};
+  {% locations %}
+}
+{% endif %}
 
 server {
   listen 443 ssl;
