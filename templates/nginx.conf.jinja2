@@ -30,30 +30,22 @@ upstream openproject {
 {% endif %}
 }
 
-{% if use_letsencrypt %}
-{% if redirect_ssl %}
 server {
   server_name {{hostname}};
+  {% if redirect_ssl %}
   return 301 https://$server_name$request_uri;
-}
-{% else %}
-server {
-  server_name {{hostname}};
+  {% else %}
   {% locations %}
+  {% endif %}
 }
-{% endif %}
 
+{% if use_letsencrypt %}
 server {
   listen 443 ssl;
 
   ssl_certificate     /etc/letsencrypt/live/{{hostname}}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/{{hostname}}/privkey.pem;
 
-  server_name {{hostname}};
-  {% locations %}
-}
-{% else %}
-server {
   server_name {{hostname}};
   {% locations %}
 }
