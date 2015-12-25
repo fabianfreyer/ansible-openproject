@@ -19,6 +19,7 @@ subdomain: openproject
 hostname: '{% if subdomain %}{{subdomain}}.{% endif %}{{ansible_fqdn}}'
 url_path: ''
 url: 'http://{{hostname}}/{{uri_path}}'
+redirect_ssl: true
 
 secret_key_base: e7fc3c2c8bec7b789b1ddbac5425c680055aadd3a3015e93f58fd5914dfebbaef30249414ea5813db5df619ebab246e96cf5b4f38d58b42452de85f5af6cf242
 
