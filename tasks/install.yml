@@ -6,6 +6,7 @@
   with_items:
   - memcached
   - libmysqlclient-dev
+  - libsqlite3-dev
 
 - name: clone openproject
   git:
