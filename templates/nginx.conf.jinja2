@@ -1,6 +1,6 @@
 {# adapted from https://github.com/abevoelker/docker-openproject/blob/master/nginx/sites-available/openproject.conf #}
 
-{% macro locations %}
+{% macro locations() %}
   root {{openproject_path}}/openproject/public;
   index index.html;
 
@@ -35,7 +35,7 @@ server {
   {% if redirect_ssl %}
   return 301 https://$server_name$request_uri;
   {% else %}
-  {% locations %}
+  {{ locations() }}
   {% endif %}
 }
 
@@ -47,6 +47,6 @@ server {
   ssl_certificate_key /etc/letsencrypt/live/{{hostname}}/privkey.pem;
 
   server_name {{hostname}};
-  {% locations %}
+  {{ locations() }}
 }
 {% endif %}
