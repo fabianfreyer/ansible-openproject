@@ -1,7 +1,7 @@
 ---
 
 openproject_branch: ''
-openproject_version: '5.0.4'
+openproject_version: '5.0.8'
 openproject_path: /srv/openproject
 openproject_user: openproject
 openproject_group: openproject
