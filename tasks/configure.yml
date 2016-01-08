@@ -61,5 +61,7 @@
   # FIXME: from ansible v2.0.0 we can maybe use the bundler module
   become: yes
   become_user: '{{openproject_user}}'
+  async: 3600
+  poll: 1
   register: seed_databasae
   changed_when: '"Writing" in seed_database.stdout'
