@@ -1,0 +1,11 @@
+[Unit]
+Description=Openproject Background Jobs
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c '. $HOME/.profile ; env RAILS_ENV="production" {{openproject_path}}/openproject/bin/rake jobs:workoff'
+StandardOutput=/dev/null
+PrivateTmp=yes
+User={{openproject_user}}
+Group={{openproject_group}}
+WorkingDirectory={{openproject_path}}/openproject

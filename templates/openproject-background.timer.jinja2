@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Openproject Background Jobs
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+Unit=openproject-background.service
+
+[Install]
+WantedBy=timers.target
