@@ -5,3 +5,34 @@
     name: 'openproject background jobs'
     job: cd {{openproject_path}}/openproject && sh -c '. $HOME/.profile ; env RAILS_ENV="production" {{openproject_path}}/openproject/bin/rake jobs:workoff >/dev/null'
     user: '{{openproject_user}}'
+  when: ansible_service_mgr != 'systemd'
+
+- name: install openproject background jobs unit file
+  template:
+    src: openproject-background.service.jinja2
+    dest: /etc/systemd/system/openproject-background.service
+  notify:
+  - reload systemd unit files
+  when: ansible_service_mgr == 'systemd'
+
+- name: enable openproject background jobs unit
+  service:
+    name: openproject-background.service
+    enabled: yes
+    state: started
+  when: ansible_service_mgr == 'systemd'
+
+- name: install openproject background jobs timer file
+  template:
+    src: openproject-background.timer.jinja2
+    dest: /etc/systemd/system/openproject-background.timer
+  notify:
+  - reload systemd unit files
+  when: ansible_service_mgr == 'systemd'
+
+- name: enable openproject background jobs timer
+  service:
+    name: openproject-background.timer
+    enabled: yes
+    state: started
+  when: ansible_service_mgr == 'systemd'
